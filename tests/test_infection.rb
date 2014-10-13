@@ -18,14 +18,25 @@ class TestInfection < Test::Unit::TestCase
     assert_true check_version users, 3
   end
 
-  def test_limited_infection_large_limit
+  def test_limited_infection_limit
     t = User.new
     users = create_class t
 
-    limited_infection t, 2, 99
-    binding.pry
-    assert_true check_version users, 2
+    limited_infection t, 2, 10
+    assert_false check_version users, 2
+
+    limited_infection t, 3, 11
+    assert_true check_version users, 3
   end
+
+=begin
+  def test_limited_infection_2
+    t = User.new
+    users = create_class t
+
+    limited_infection t.coaches.first, 2, 8
+  end
+=end
 
   # helper functions
   def create_class t, size = 10

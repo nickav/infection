@@ -34,25 +34,33 @@ end
 =end
 
 def limited_infection (user, version, limit)
-  q = Queue.new
+  q = []
 
   q.push user
   limit -= 1
 
   while !q.empty? 
     u = q.pop
-    u.version = version
+    #u.version = version
 
-    break if user.coaches.length >= limit
-    limit -= user.coaches.length
+    count = 0
     for u in user.coaches
-      q.push u
+      count += 1 if u.version != version
+    end
+    u.version = version if count == 0 || count <= limit
+    if count != 0 && count <= limit 
+      q.concat user.coaches
+      limit -= count
     end
 
-    break if user.is_coached_by.length >= limit
-    limit -= user.is_coached_by.length
-    for u in user.is_coached_by 
-      q.push u
+    count = 0
+    for u in user.is_coached_by
+      count += 1 if u.version != version
+    end
+    if count != 0 && count <= limit 
+      q.concat user.is_coached_by
+      limit -= count
     end
   end
 end
+
