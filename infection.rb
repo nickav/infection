@@ -40,26 +40,28 @@ def limited_infection (user, version, limit)
   limit -= 1
 
   while !q.empty? 
-    u = q.pop
-    #u.version = version
+    curr = q.pop
+    #curr.version = version
 
-    count = 0
-    for u in user.coaches
-      count += 1 if u.version != version
-    end
-    u.version = version if count == 0 || count <= limit
-    if count != 0 && count <= limit 
-      q.concat user.coaches
-      limit -= count
+    add = []
+    for i in curr.coaches
+      add.push i if i.version != version
     end
 
-    count = 0
-    for u in user.is_coached_by
-      count += 1 if u.version != version
+    curr.version = version unless add.length > limit
+
+    if !add.empty? && add.length <= limit 
+      q.concat add
+      limit -= add.length
     end
-    if count != 0 && count <= limit 
-      q.concat user.is_coached_by
-      limit -= count
+
+    add = []
+    for i in curr.is_coached_by
+      add.push i if i.version != version
+    end
+    if !add.empty? && add.length <= limit 
+      q.concat add
+      limit -= add.length
     end
   end
 end
