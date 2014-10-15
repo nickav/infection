@@ -1,3 +1,11 @@
+#
+# test class that models a database relationship of users
+# users have the relations coaches and is_coached_by representing
+# students in a classroom
+#
+# @author Nick Aversano
+#
+
 class User
   attr_accessor :coaches, :is_coached_by, :version
 

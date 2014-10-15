@@ -1,5 +1,15 @@
+#
+# solution to graph coloring infection problem 
+# users on a site should be on the same version,
+# when pushing updates we want to keep most users on the same version
+# 
 # @author Nick Aversano
-# graph coloring infection problem 
+#
+
+# starting with user, recursively infects (sets the version to version)
+# for each coaches or is_coached_by relation
+# @param: User user the starting user
+# @param: int/String version the version to set
 def total_infection (user, version)
   user.version = version
   for u in user.coaches
@@ -14,6 +24,11 @@ def total_infection (user, version)
   end
 end
 
+# similar to total_infection, but attempts to come close to the limit
+# without going over it. Tries to keep every user in a given class on
+# the same version or at least nearly every user
+# @param: User user the starting user
+# @param: int/String version the version to set
 def limited_infection (user, version, limit)
   q = []
 
