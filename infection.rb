@@ -14,25 +14,6 @@ def total_infection (user, version)
   end
 end
 
-=begin
-def total_infection (user, version)
-  q = Queue.new
-  q.push user
-
-  while !q.empty?
-    u = q.pop
-    u.version = version
-
-    for u in user.coaches
-      q.push u if u.version != version
-    end
-    for u in user.is_coached_by
-      q.push u if u.version != version
-    end
-  end
-end
-=end
-
 def limited_infection (user, version, limit)
   q = []
 

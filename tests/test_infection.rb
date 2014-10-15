@@ -23,16 +23,16 @@ class TestInfection < Test::Unit::TestCase
     users = create_class t
 
     # test too small limit
-    limited_infection t, 2, 10
+    limited_infection t, 2, (users.length - 1)
     assert_false check_version users, 2
     # what else should be the outcome?
 
     # test exact limit
-    limited_infection t, 3, 11
+    limited_infection t, 3, users.length
     assert_true check_version users, 3
 
     # test students infecting teachers
-    limited_infection t.coaches.first, 4, 11
+    limited_infection t.coaches.first, 4, users.length
     assert_true check_version users, 4
   end
 
@@ -48,8 +48,25 @@ class TestInfection < Test::Unit::TestCase
     users = c1 + c2
 
     # test double infection
-    limited_infection student, 2, 22
+    limited_infection student, 2, users.length
     assert_true check_version users, 2
+  end
+
+  def test_limited_infection_chain
+    t1 = User.new
+    c1 = create_class t1, 3
+    # one student teaching another class
+    c2 = create_class c1.last, 3
+    users = c1 + c2
+    users.uniq!
+
+    limited_infection t1, 2, users.length
+    assert_true check_version users, 2
+
+    limit = 4
+    limited_infection t1, 3, limit
+    v = user_versions_assoc users
+    assert_equal v[3], (limit - 1)
   end
 
   def test_zero_limit
@@ -88,5 +105,18 @@ class TestInfection < Test::Unit::TestCase
     end
 
     return good
+  end
+
+  def user_versions_assoc users
+    hash = {}
+    users.each do |user|
+      k = user.version
+      if hash.has_key? k
+        hash[k] += 1
+      else
+        hash[k] = 1
+      end
+    end
+    return hash
   end
 end
